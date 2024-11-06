@@ -1,34 +1,44 @@
 version: '3.8'
+
 services:
   user-service:
     build: ./user-service
     environment:
-      DATABASE_URL: postgres://user:password@db/postgres
+      DATABASE_URL: postgres://user:password@db-postgres/shop-ease-db
     ports:
       - "5000:5000"
     depends_on:
-      - db
+      - db-postgres
 
   product-service:
     build: ./product-service
     environment:
-      DATABASE_URL: mongodb://db/mongodb 
+      DATABASE_URL: mongodb://mongo-server/mongodb
     ports:
       - "3000:3000"
+    depends_on:
+      - mongo-server
 
-  order-service:
-    build: ./order-service 
-    ports:
-      - "8080:8080"
+  
 
-  db:
-    image: postgres:latest 
+  db-postgres:
+    image: postgres:latest
     environment:
-      POSTGRES_USER: user 
-      POSTGRES_PASSWORD: password 
-      POSTGRES_DB: postgres 
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: shop-ease-db
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pg-data:/var/lib/postgresql/data
 
+  mongo-server:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo-user
+      MONGO_INITDB_ROOT_PASSWORD: mongo-password
+    volumes:
+      - mongo-data:/data/db
+
+# Define named volumes for persistent storage    
 volumes:
-  postgres_data:
+  pg-data:
+  mongo-data:

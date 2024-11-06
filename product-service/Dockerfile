@@ -2,7 +2,7 @@ FROM node:14
 
 WORKDIR /app
 
-COPY package.json .
+COPY packages.json .
 RUN npm install
 
 COPY app.js .
